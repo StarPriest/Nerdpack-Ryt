@@ -41,7 +41,7 @@ local buffCheck ={
 local boostSpeed =
 {
     --羽毛
-    {'天堂之羽','talent(2,3) & player.moving & !player.buff(天堂之羽))','player.ground'},
+    {'天堂之羽','talent(2,3) & moving & !buff(天堂之羽)','player.ground'},
 }
 
 local saveMe={
@@ -57,13 +57,15 @@ local inCombat ={
     {saveMe},
     {healMe},
     {'真言术：慰','talent(3,3)','target'},
-    {'暗言术：痛','!talent(6,1) & !buff(暗言术：痛) & target(player))','target'},
-    {'暗言术：痛','!talent(6,1) & !buff(暗言术：痛) & target(player))','enemies'},
-    {'净化邪恶','talent(6,1) & !buff(净化邪恶) & target(player))','target'},
-    {'净化邪恶','talent(6,1) & !buff(净化邪恶) & target(player))','enemies'},
+    {'暗言术：痛','!talent(6,1) & !debuff(暗言术：痛)','target'},
+    {'暗言术：痛','!talent(6,1) & !debuff(暗言术：痛) & target(player)','enemies'},
+    {'净化邪恶','talent(6,1) & !debuff(净化邪恶)','target'},
+    {'净化邪恶','talent(6,1) & !debuff(净化邪恶) & target(player)','enemies'},
     {'教派分歧','talent(1,3)，health > 90','target'},
     {'惩击','{{talent(1,3) & debuff(教派分歧)} || !talent(1,3)} & !player.moving','target'},
+    {'惩击','!player.moving','target'},
     {'苦修','player.health > 50 & {{talent(1,3) & debuff(教派分歧)} || !talent(1,3)}','target'},
+    {'苦修','player.health > 50','target'},
     {shadowFriend},
     --渐隐术未做
     
@@ -88,7 +90,7 @@ local Spell_wow801_Priest_Disc=
 
 }
 
-NeP.CR:Add(257, {
+NeP.CR:Add(256, {
     name = '|cffFACC2E [老日]|r 老年人助手 - |cffFACC2E戒律牧单人模式|r',
     ic = inCombat,
     ooc =outCombat,
