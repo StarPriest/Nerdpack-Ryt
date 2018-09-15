@@ -61,7 +61,7 @@ local inCombat ={
     {'暗言术：痛','!talent(6,1) & !debuff(暗言术：痛) & target(player)','enemies'},
     {'净化邪恶','talent(6,1) & !debuff(净化邪恶)','target'},
     {'净化邪恶','talent(6,1) & !debuff(净化邪恶) & target(player)','enemies'},
-    {'教派分歧','talent(1,3)，health > 90','target'},
+    {'教派分歧','talent(1,3) & health > 90','target'},
     {'惩击','{{talent(1,3) & debuff(教派分歧)} || !talent(1,3)} & !player.moving & spell(苦修).cooldown > 0','target'},
     {'惩击','!player.moving & spell(苦修).cooldown > 0','target'},
     {'苦修','player.health > 50 & {{talent(1,3) & debuff(教派分歧)} || !talent(1,3)}','target'},
