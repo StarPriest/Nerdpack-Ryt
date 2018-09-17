@@ -3,7 +3,7 @@ local NeP = NeP
 
 local GUI = {
     {type = "texture",
-    texture = "Interface\\AddOns\\Nerdpack-Yobleed\\media\\holy.blp",
+    --texture = "Interface\\AddOns\\Nerdpack-Yobleed\\media\\holy.blp",
     width = 512, 
     height = 256, 
     offset = 90, 
@@ -145,7 +145,8 @@ local dispel =
 local boostSpeed =
 {
     --羽毛
-    {'Angelic Feather','UI(key_AF) & talent(2,3) & player.moving & !player.buff(Angelic Feather)','player.ground'},
+     --羽毛
+     {'天堂之羽','UI(key_AF) & talent(2,3) & player.moving & !buff(天堂之羽)','player.ground'},
 }
 
 --真言术：耐

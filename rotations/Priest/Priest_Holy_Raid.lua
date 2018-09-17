@@ -144,7 +144,7 @@ local dispel =
 local boostSpeed =
 {
     --羽毛
-    {'天堂之羽','UI(key_AF) & talent(2,3) & player.moving & !player.buff(Angelic Feather)','player.ground'},
+    {'天堂之羽','UI(key_AF) & talent(2,3) & player.moving & !buff(天堂之羽)','player.ground'},
 }
 
 --真言术：韧
