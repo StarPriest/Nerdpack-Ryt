@@ -231,6 +231,7 @@ local HealSingle=
 
 
 
+
 local inCombat=
 {
     {dispel,'toggle(dispel)'},  
@@ -283,9 +284,9 @@ local Spell_wow801_Priest_Holy={
 }
 
 NeP.CR:Add(257, {
-    name = '|cffFACC2E [老日]|r 老年人助手 - |cffFACC2E神牧团本|r',
-    ic = {{inCombat,'!player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水)'}},
-    ooc = {{outCombat,'!player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水)'}},
+    name = '|cffFACC2E [老日]|r 神牧 - |cffFACC2E团本|r',
+    ic = {{inCombat,'group.type == 3 &!player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水) & !player.casting(圣言术：赎)'}},
+    ooc = {{outCombat,'group.type == 3 & !player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水) & !player.casting(圣言术：赎)'}},
     gui = GUI,
     gui_st = {title='老日的牧师助手-神牧', width='512', height='256', color='FACC2E'},
     ids = Spell_wow801_Priest_Holy,

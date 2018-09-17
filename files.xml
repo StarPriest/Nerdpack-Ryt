@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-  <Script file="rotations\priest\Priest_Holy.lua"/>
+  <Script file="rotations\priest\Priest_Holy_Party.lua"/>
   <Script file="rotations\priest\Priest_Holy_Raid.lua"/>
   <Script file="rotations\priest\Priest_Disc_Solo.lua"/>
 </Ui>
