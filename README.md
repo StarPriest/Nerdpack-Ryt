@@ -3,10 +3,17 @@
 
 # NerdPack-RYT-Priest
 #### 该项目是基于Nerdpack的一个牧师自动战斗策略。
-[NerdPack 下载](https://github.com/hacker5510/NerdPack/archive/master.zip "NerdPack 下载")
+
 #### 本是自用，居然有人fork，有人star，还都是英文名的！身为Github小白的我激动无比，故将之规范下。
 #### 不太会用GIT，诸位将就。
 
+#### 使用方法
+#### 1.下载 [EWT ](https://ewtwow.com/EWT/Application.zip "EWT ")
+#### 2.Clone [NerdPack](https://github.com/hacker5510/NerdPack.git "NerdPack")
+#### 3.Clone [NerdPack-Protected](https://github.com/hacker5510/NerdPack-Protected.git "NerdPack-Protected")
+#### 4.Clone [NerdPack-RTYPriest](https://github.com/hacker5510/NerdPack-RTYPriest.git "NerdPack-RTYPriest")
+#### 将2、3、4步下载的文件夹放入wow\Interface\Addons\
+#### 打开ewt设置wow路径，选择safemode 之后点Attach按钮运行。等待EWT关闭后输入账号密码登录wow
 # 神牧 推荐使用 进攻部分未做，闲时以治疗术填充。
 ## 团队副本
 ### 测试环境：30人
