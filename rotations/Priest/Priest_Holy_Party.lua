@@ -117,7 +117,7 @@ local inCombat_Party ={
     {'治疗祷言','tank.health>30 & tank.alive & lowest.health >35 & lowest.distance < 40 & spell(圣言术：灵).cooldown > 0 & lowest.area(40,80).heal > 3 & !player.moving','lowest'},
     -- 圣言术：灵
     --{'光晕','player.area(30,85)>10 & talent(6,3)'},
-    {'!圣言术：灵','lowest.distance<40 & lowest.area(10,80).heal > 3','lowest.ground'},
+    {'!圣言术：灵','lowest.distance<40 & lowest.area(10,80).heal >= 3','lowest.ground'},
     -- 联结治疗（天赋5,2）
     {'!联结治疗','spell(圣言术：静).cooldown>0 & lowest.distance < 40 & lowest.area(20,80).heal > 0 & spell(圣言术：灵).cooldown>0 & !player.moving & talent(5,2)','lowest'},
    -- 快速治疗 无论有无瞬发buff
@@ -140,7 +140,9 @@ local inCombat={
     {boostSpeed},    
     {BuffCheck,'UI(key_CheckBuffInCombat)'},
     {'渐隐术','target(player)','enemies'},
-    {'圣言术：罚','casting(震耳咆哮)','enemies'},
+    {'圣言术：罚','casting(震耳咆哮).percent < 10','enemies'},
+    --惩击如何释放
+    {'惩击','player.area(40,90) == 0','target'},
     {inCombat_Party},
     
 }
