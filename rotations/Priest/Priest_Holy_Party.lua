@@ -49,7 +49,10 @@ local purfy ={
     {'纯净术','debuff(浸油之刃).any & distance < 30','friendly'},
     --远离人群多少码驱散 如：area(10).friendly == 0  意思就是10码内没人
     --{'纯净术','debuff(debuff名称).any & distance < 40 & area(10).friendly == 0','friendly'},
-
+    {'纯净术','debuff(野火).any & distance < 30','friendly'},
+    {'纯净术','debuff(熔化的黄金).any & distance < 30','friendly'},
+    {'纯净术','debuff(挥之不去的恶心感).any & distance < 30','friendly'},
+    {'纯净术','debuff(瘟疫步).any & distance < 30','friendly'},
 }
 
 local dispel ={
@@ -71,7 +74,7 @@ local dispel ={
     {'驱散魔法','buff(带电鳞片).any & distance < 30','enemies'},
     {'驱散魔法','buff(积攒电荷).any & distance < 30','enemies'},
     --托尔达戈
-
+    {'驱散魔法','buff(镀金之爪).any & distance < 30','enemies'},
     --暴富矿区
     {'驱散魔法','buff(脑部冻结).any & distance < 30','enemies'},
     {'驱散魔法','buff(腐蚀性化合物).any & distance < 30','enemies'},
@@ -92,6 +95,9 @@ local BuffCheck ={
     {'真言术：韧','friendly.distance < 40 & !buff(真言术：韧)','friendly'},
 }
 
+local interrupt={
+    {'圣言术：罚','casting(震耳咆哮).percent < 10','enemies'},
+}
 --队伍模式战斗中治疗策略
 local inCombat_Party ={
     
@@ -101,6 +107,10 @@ local inCombat_Party ={
     {'/use 海滨法力药水','player.mana < 30 & item(152495).usable & item(152495).count>0'},
     {purfy},
     {dispel},
+    {'渐隐术','target(player)','enemies'},
+   
+    --惩击如何释放
+    --{'惩击','player.area(40,90) == 0','target'},
     --化身条件有问题 莫名其妙开。
     {'神圣化身','area(40,50).heal >= 2 || {tank.health < 30 & tank.distance < 40}','player'}, --增加范围识别
     --当自己血量低于35% 绝望祷言
@@ -112,26 +122,27 @@ local inCombat_Party ={
     --当dps血量低于15% 翅膀
     {'!守护之魂','lowest.health < 10','lowest'},
     --愈合祷言 前提是没人血危
-    {'愈合祷言', 'tank.health>30 & tank.alive & !player.moving & lowest.health >55 & !buff(愈合祷言)', {'tank','player','lowest'}},
+    {'愈合祷言', 'tank.health > 30 & tank.alive & !player.moving & lowest.health >55 & !buff(愈合祷言)', {'tank','player','lowest'}},
     -- 治疗祷言 前提是没人血危
-    {'治疗祷言','tank.health>30 & tank.alive & lowest.health >35 & lowest.distance < 40 & spell(圣言术：灵).cooldown > 0 & lowest.area(40,80).heal > 3 & !player.moving','lowest'},
+    {'治疗祷言','tank.health > 30 & tank.alive & lowest.health >35 & lowest.distance < 40 & spell(圣言术：灵).cooldown > 0 & lowest.area(40,80).heal > 3 & !player.moving','lowest'},
     -- 圣言术：灵
     --{'光晕','player.area(30,85)>10 & talent(6,3)'},
     {'!圣言术：灵','lowest.distance<40 & lowest.area(10,80).heal >= 3','lowest.ground'},
     -- 联结治疗（天赋5,2）
-    {'!联结治疗','spell(圣言术：静).cooldown>0 & lowest.distance < 40 & lowest.area(20,80).heal > 0 & spell(圣言术：灵).cooldown>0 & !player.moving & talent(5,2)','lowest'},
-   -- 快速治疗 无论有无瞬发buff
-   {'快速治疗','spell(圣言术：静).cooldown>0 & distance < 40 & health < 75 & !player.moving','tank'},       
+    {'!联结治疗','friendly.health < 80 & spell(圣言术：静).cooldown>0 & friendly.distance < 40 & friendly.area(20,80).heal > 0 & spell(圣言术：灵).cooldown>0 & !player.moving & talent(5,2)','friendly'},
+    -- 快速治疗 无论有无瞬发buff
+    {'快速治疗','spell(圣言术：静).cooldown > 0 & distance < 40 & health < 75 & !player.moving','tank'},       
     -- 快速治疗 无论有无瞬发buff
     {'快速治疗','tank.health>30 & tank.alive & spell(圣言术：静).cooldown>0 & lowest.distance < 40 & lowest.health < 75 & !player.moving','lowest'},    
     -- 快速治疗2 有瞬发buff 
     {'!快速治疗','{player.moving || player.buff(圣光涌动).duration<=3 || lowest.health < 40} & spell(圣言术：静).cooldown>0 & player.buff(圣光涌动) & lowest.distance < 40 & lowest.health < 85','lowest'},  
     -- 圣言术：静
-    {'!圣言术：静','lowest.distance < 40 & lowest.health < 70','lowest'},
+    {'!圣言术：静','distance < 40 & health < 70','tank'},
+    {'!圣言术：静','lowest.distance < 40 & lowest.health < 65','lowest'},
     --治疗术
     --{'治疗术','distance < 40 & health < 90 & !player.moving','lowest'},
     --恢复
-    {'恢复','!buff(恢复) & distance < 40 & health > 70','tank'}
+    {'恢复','!buff(恢复) & distance < 40 & health < 90','tank'}
 
 
 }
@@ -139,10 +150,6 @@ local inCombat_Party ={
 local inCombat={
     {boostSpeed},    
     {BuffCheck,'UI(key_CheckBuffInCombat)'},
-    {'渐隐术','target(player)','enemies'},
-    {'圣言术：罚','casting(震耳咆哮).percent < 10','enemies'},
-    --惩击如何释放
-    {'惩击','player.area(40,90) == 0','target'},
     {inCombat_Party},
     
 }
@@ -159,13 +166,13 @@ local eatFood = {
     {'/use 提拉加德尖奶酪','!buff(进食) & health < 80 & item(159874).count > 0'},
 }
 
---喝水
+--喝水 恐惧之面
 local drinkWater = {
     --跃岩矿泉水 159867
     --159868 散养羊奶
-    {'/use 散养羊奶','!buff(喝水) & mana < 80 & item(159868).count > 0'},    
-    {'/use 跃岩矿泉水','!buff(喝水) & mana < 80 & item(159867).count > 0'},
-    {'/use 魔法汉堡','!buff(进食饮水) & mana < 80 & item(159867).count > 0'},
+    {'/use 散养羊奶','!buff(喝水) & !buff(进食饮水) & mana < 80 & item(159868).count > 0'},    
+    {'/use 跃岩矿泉水','!buff(喝水) & !buff(进食饮水) & mana < 80 & item(跃岩矿泉水).count > 0'},
+    {'/use 魔法汉堡','!buff(进食饮水) & !buff(喝水) &mana < 80 & item(魔法汉堡).count > 0'},
 }
 
 --吃喝
@@ -173,35 +180,25 @@ local eatAnddrink={
     {eatFood,'UI(key_Food_check) & !buff(进食) & !moving & health<UI(key_Food_spin)'},
     {drinkWater,'UI(key_Drink_check) & !buff(喝水) & !moving & mana<UI(key_Drink_spin)'},
     --{eatCooking,'UI(key_Cooking)'},
-    {'/stand','mana > 80 & {buff(喝水) || buff(进食)}'},
+    {'/stand','mana > 80 & {buff(喝水) || buff(进食) || buff(进食饮水)}'},
    
 }
 
---队伍模式非战斗状态策略
-local outCombat_Party ={
+--非战斗状态策略
+local outCombat={
     {BuffCheck},
+    --{eatAnddrink},
+    {boostSpeed},    
     -- 治疗祷言
     {'治疗祷言','lowest.distance < 40 & spell(圣言术：灵).cooldown > 0 & lowest.area(40,85).heal > 2 & !player.moving'},
     -- 圣言术：灵
-    {'圣言术：灵','lowest.distance<40 & lowest.area(10,85).heal > 2','lowest.ground'},
+    {'圣言术：灵','lowest.distance < 40 & lowest.area(10,85).heal > 2','lowest.ground'},
     -- 联结治疗（天赋5,2）
     {'联结治疗','lowest.distance < 40 & lowest.area(20,80).heal > 0 & spell(圣言术：灵).cooldown> 0 & !player.moving & talent(5,2)','lowest'},
     -- 快速治疗
     {'快速治疗','lowest.distance < 40 & lowest.health < 75 & !player.moving','lowest'},       
     -- 圣言术：静
     {'圣言术：静','lowest.distance < 40 & lowest.health<70','lowest'},
-   
-   
-    
-}
-
---非战斗状态策略
-local outCombat={
-    {BuffCheck},
-    {eatAnddrink},
-    {boostSpeed},    
-    {outCombat_Party},   
-    --{'群体复活','area(100).dead'},
 }
 
 local blacklist = {
@@ -215,7 +212,7 @@ local Spell_wow801_Priest_Holy={
 NeP.CR:Add(257, {
     name = '|cffFACC2E [老日]|r 神牧 - |cffFACC2E五人本|r',
     ic = {{inCombat,'group.type == 2 & !player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水) & !player.casting(圣言术：赎)'}},
-    ooc = {{outCombat,'group.type == 2 & !player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水) & !player.casting(圣言术：赎)'}},
+    ooc = {{outCombat,'!player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水) & !player.casting(圣言术：赎)'}},
     gui = GUI,
     gui_st = {title='老日的牧师助手-神牧', width='512', height='256', color='FACC2E'},
     ids = Spell_wow801_Priest_Holy,
