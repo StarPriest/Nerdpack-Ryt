@@ -203,11 +203,11 @@ local HealRaid =
     --愈合祷言
     {'愈合祷言', 'UI(key_PM) & !player.moving & player.health > 30 & !buff(愈合祷言) & distance < 40', {'tank1','tank2','player','lowest'}},  
     --圣言术：灵 
-    {'圣言术：灵','UI(key_Sanctify) & friendly.distance<40 & friendly.area(10,UI(key_Sanctify_Health)).heal >= UI(key_Sanctify_Count)','friendly.ground'},
+    {'!圣言术：灵','UI(key_Sanctify) & friendly.distance<40 & friendly.area(10,UI(key_Sanctify_Health)).heal >= UI(key_Sanctify_Count)','friendly.ground'},
     --治疗祷言 目标40码内最近的四个人。
     {'治疗祷言','UI(key_PH) & lowest.distance < 40 & spell(圣言术：灵).cooldown > 0 & {spell(治疗之环).cooldown > 0 & talent(5,3)} & lowest.area(UI(key_PH_Range),UI(key_PH_Count)).heal >= UI(key_PH_Count) & !player.moving','lowest'},
     --治疗之环
-    {'治疗之环','UI(key_HC) & talent(5,3) & friendly.distance < 40 & friendly.area(30,UI(key_HC_Health)).heal >= UI(key_HC_Count)','friendly'},
+    {'!治疗之环','UI(key_HC) & talent(5,3) & friendly.distance < 40 & friendly.area(30,UI(key_HC_Health)).heal >= UI(key_HC_Count)','friendly'},
     --光晕
     {'光晕','UI(Key_Halo) & talent(6,3) & player.area(30,UI(Key_Halo_Health)) >= UI(Key_Halo_Count) & !player.moving'},   
     --圣言术：赎
