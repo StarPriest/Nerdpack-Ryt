@@ -160,17 +160,24 @@ local Posion =
     {'/use 海滨法力药水','UI(Key_UseMP_check) & player.mana < UI(Key_UseMP_spin) & item(152495).usable & item(152495).count > 0'},
 }
 
+local testStopCasting={
+    {'!/stopcasting','buff(圣光回响).duration.any <= gcd & buff(圣光回响).any','player'},  
+    {'治疗术','health>90','player'},
+    
+}
+
 --震耳咆哮
 local inCombat={
+    {'!/stopcasting','debuff(践踏).duration.any <= gcd & debuff(践踏).any','player'},  
     {boostSpeed},    
     {BuffCheck,'UI(key_IC_PF)'},        
     {HealStone},
     {Posion},
     {purfy},
-    {dispel},
-    {'!渐隐术','target(player)','enemies'},   
- 
-    {'神圣化身','{area(40).friendly >=2 & area(40,50).heal >= 2} || {tank.health < 30 & tank.distance < 40}','player'}, --增加范围识别
+    {dispel}, 
+
+    {'!渐隐术','target(player)','enemies'},    
+    {'神圣化身',' area(40,50).heal >= 2 || {tank.health < 30 & tank.distance < 40}','player'}, 
     --当自己血量低于35% 绝望祷言
     {'!绝望祷言','UI(Key_DP_check) & health < UI(Key_DP_spin)','player'},
     --当自己血量低于15% 翅膀
@@ -184,26 +191,27 @@ local inCombat={
     -- 治疗祷言 前提是没人血危
     --{'治疗祷言','tank.health > 30 & tank.alive & lowest.health >35 & lowest.distance < 40 & spell(圣言术：灵).cooldown > 0 & lowest.area(40,80).heal > 3 & !player.moving','lowest'},
     --治疗祷言 目标40码内最近的四个人。
-    {'治疗祷言','UI(key_PH) & lowest.distance < 40 & spell(圣言术：灵).cooldown > 0 & {spell(治疗之环).cooldown > 0 & talent(5,3)} & lowest.area(UI(key_PH_Range),UI(key_PH_Count)).heal >= UI(key_PH_Count) & !player.moving','lowest'},  
+    {'治疗祷言','UI(key_PH) & lowest.distance  <  40  &  player.spell(圣言术：灵).cooldown  >  0 & {player.spell(治疗之环).cooldown  >  0  &  talent(5,3)} &  lowest.area(UI(key_PH_Range),UI(key_PH_Count)).heal >= UI(key_PH_Count) & !player.moving','lowest'},  
     -- 圣言术：灵
     --{'光晕','player.area(30,85)>10 & talent(6,3)'},
     --{'!圣言术：灵','lowest.distance<40 & lowest.area(10,80).heal >= 3','lowest.ground'},
-    {'!圣言术：灵','UI(key_Sanctify) & friendly.distance<40 & friendly.area(10,UI(key_Sanctify_Health)).heal >= UI(key_Sanctify_Count)','friendly.ground'},
+    {'!圣言术：灵','UI(key_Sanctify) & distance < 40 & area(10,UI(key_Sanctify_Health)).heal >= UI(key_Sanctify_Count)','lowest.ground'},
     -- 联结治疗（天赋5,2）
     {'!联结治疗','friendly.health < 80 & spell(圣言术：静).cooldown> 0 & friendly.distance < 40 & friendly.area(20,80).heal > 0 & spell(圣言术：灵).cooldown>0 & !player.moving & talent(5,2)','friendly'},
-    -- 快速治疗 无论有无瞬发buff
-    {'快速治疗','spell(圣言术：静).cooldown > 0 & distance < 40 & health < 75 & !player.moving','tank'},       
-    -- 快速治疗 无论有无瞬发buff
+      -- 快速治疗 无论有无瞬发buff
     {'快速治疗','tank.health>30 & tank.alive & spell(圣言术：静).cooldown>0 & lowest.distance < 40 & lowest.health < 75 & !player.moving','lowest'},    
+    -- 快速治疗 无论有无瞬发buff
+    {'快速治疗','tank.alive & lowest.health > 30 & spell(圣言术：静).cooldown > 0 & distance < 40 & health < 75 & !player.moving','tank'},       
+
     -- 快速治疗2 有瞬发buff 
     {'!快速治疗','{player.moving || player.buff(圣光涌动).duration<=3 || lowest.health < 40} & spell(圣言术：静).cooldown>0 & player.buff(圣光涌动) & lowest.distance < 40 & lowest.health < 85','lowest'},  
     -- 圣言术：静
-    {'!圣言术：静','distance < 40 & health < 70','tank'},
     {'!圣言术：静','lowest.distance < 40 & lowest.health < 65','lowest'},
+    {'!圣言术：静','tank.alive & distance < 40 & health < 70','tank'},   
     --治疗术
-    --{'治疗术','distance < 40 & health < 90 & !player.moving','lowest'},
+    {'治疗术','lowest.health > 50 & distance < 40 & health < 90 & !player.moving','lowest'},
     --恢复
-    {'恢复','!buff(恢复) & distance < 40 & health < 90','tank'}
+    {'恢复','!buff(恢复) & distance < 40 & health < 90','tank'},
     
 }
 
@@ -239,6 +247,7 @@ local eatAnddrink={
 
 --非战斗状态策略
 local outCombat={
+    {'!/stopcasting','debuff(践踏).duration.any <= gcd & debuff(践踏).any','player'},    
     {BuffCheck,'UI(key_OOC_PF)'},
     --{eatAnddrink},
     {boostSpeed},    
@@ -252,6 +261,8 @@ local outCombat={
     {'快速治疗','lowest.distance < 40 & lowest.health < 75 & !player.moving','lowest'},       
     -- 圣言术：静
     {'圣言术：静','lowest.distance < 40 & lowest.health<70','lowest'},
+
+    {'恢复','!buff(恢复) & distance < 40 & health < 90','lowest'},
 }
 
 local blacklist = {
