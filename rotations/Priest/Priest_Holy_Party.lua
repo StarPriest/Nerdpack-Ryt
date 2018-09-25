@@ -1,21 +1,3 @@
---[[
-    快速治疗阈值80% 
-    治疗逻辑：
-    圣言术：静， 当T血量低于70% 当玩家血量低于55%时
-    快速治疗： 当T血量低于 80时，当玩家血量低于80
-    治疗术：T 95% 阈值 玩家 90%
-
-普通dps模式 设置阈值 80 
-火力全开模式 设置阈值 50 
-    ]]
-
-
-
-
-
-
-
-
 local _, yobleed = ...
 local NeP = NeP
 
@@ -24,14 +6,19 @@ local GUI = {
     texture = "Interface\\AddOns\\NerdPack-RTYPriest\\media\\holy.blp",
     width = 512, 
     height = 240, 
-    offset = 90, 
+    offset = 260, 
     y = 42, 
     center = true},
+    {type = 'header', text = '食物管理 设置', size=18,align = 'left'},
+    {type = 'checkspin', text = '低于多少法力值时喝水', key = 'Key_Drink', spin = 80, max =100, size=14,check = true},
+    {type = 'checkspin', text = '低于多少血量时吃面包', key = 'Key_Food', spin = 90, max =100, size=14,check = true},
+    {type = 'spacer'},{type = 'ruler'},{type = 'spacer'},
+
     {type = 'header', text = '增益管理 设置', size=18,align = 'center'},
     {type = 'checkbox', text = '天堂之羽', key = 'key_AF', width = 55, size=14,default = true},
     {type = 'checkbox', text = '非战斗状态-真言术：韧', key = 'key_OOC_PF', width = 55, size=14,default = true},
     {type = 'checkbox', text = '战斗状态-真言术：韧', key = 'key_IC_PF', width = 55, size=14,default = true},
-    {type = 'ruler'},{type = 'spacer'},
+    {type = 'spacer'},{type = 'ruler'},{type = 'spacer'},
     
     {type = 'header', text = '物品使用 设置', size=18,align = 'center'},
     {type = 'checkspin', text = '启用 海滨法力药水', key = 'Key_UseMP', spin = 30, max =100, size=14,check = true},
@@ -79,9 +66,13 @@ local GUI = {
     {type = 'ruler'},{type = 'spacer'},
 
 }
-
+--yuanali
 local exeOnLoad = function()
-    print('|cffFACC2E 神牧战斗策略已载入|r')
+    print('|cffF0EBE0 神牧 |r|cffff0000 >>五人本<<|r|cffFACC2E 战斗策略已载入|r')
+    print('|cffF0EBE0 神牧 |r|cffff0000 >>五人本<<|r|cffFACC2E 战斗策略已载入|r')
+    print('|cffF0EBE0 神牧 |r|cffff0000 >>五人本<<|r|cffFACC2E 战斗策略已载入|r')
+    print('|cffF0EBE0 神牧 |r|cffff0000 >>五人本<<|r|cffFACC2E 战斗策略已载入|r')
+    print('|cffF0EBE0 神牧 |r|cffff0000 >>五人本<<|r|cffFACC2E 战斗策略已载入|r')
     print('|cffff0000 设置项: |r右键主开关可找到|r')
   end
 
@@ -158,15 +149,15 @@ local interrupt={
 
 --治疗石
 local HealStone ={
-    {'/use 治疗石','UI(Key_UseHS_check) & spell(绝望祷言).cooldown > 0 & player.health < UI(Key_UseHS_spin) & item(5512).usable & item(5512).count>0'},
+    {'!#5512','UI(Key_UseHS_check) & spell(绝望祷言).cooldown > 0 & player.health < UI(Key_UseHS_spin) & item(5512).usable & item(5512).count>0'},
 }
 
 --各种药水
 local Posion ={
     --使用优先级：绝望祷言 糖 治疗药水 活力药水
-    {'/use 海滨治疗药水', 'UI(Key_UseHP_check) & {spell(绝望祷言).cooldown > 0 || !UI(Key_DP)} & player.health < UI(Key_UseHP_spin) & item(152494).usable & item(152494).count > 0','player'},
-    {'/use 海滨活力药水','UI(Key_UseMHP_check) & {spell(绝望祷言).cooldown > 0 || !UI(Key_DP)} & player.health < UI(Key_UseMHP_spin) & item(163082).usable & item(163082).count >0 & item(152494).cooldown > 0','player'},
-    {'/use 海滨法力药水','UI(Key_UseMP_check) & player.mana < UI(Key_UseMP_spin) & item(152495).usable & item(152495).count > 0','player'},
+    {'!#152494', 'UI(Key_UseHP_check) & {spell(绝望祷言).cooldown > 0 || !UI(Key_DP)} & player.health < UI(Key_UseHP_spin) & item(152494).usable & item(152494).count > 0','player'},
+    {'!#163082','UI(Key_UseMHP_check) & {spell(绝望祷言).cooldown > 0 || !UI(Key_DP)} & player.health < UI(Key_UseMHP_spin) & item(163082).usable & item(163082).count >0 & item(152494).cooldown > 0','player'},
+    {'#152495','UI(Key_UseMP_check) & player.mana < UI(Key_UseMP_spin) & item(152495).usable & item(152495).count > 0','player'},
 }
 
 --吃食物
@@ -175,33 +166,34 @@ local eatFood = {
     --雪莓奶油茶 159878
     --炸黄油曲奇 163107 
     --提拉加德尖奶酪 159874 这个回复量是十五万，其余是十万
-    {'/use 山羊肉干','!buff(进食饮水) & !buff(进食) & health < 80 & item(163052).count > 0','player'},
-    {'/use 雪莓奶油茶','!buff(进食饮水) & !buff(进食) & health < 80 & item(159878).count > 0','player'},
-    {'/use 炸黄油曲奇','!buff(进食饮水) & !buff(进食) & health < 80 & item(163107).count > 0','player'},
-    {'/use 提拉加德尖奶酪','!buff(进食饮水) & !buff(进食) & health < 80 & item(159874).count > 0','player'},
+    {'#163052','!buff(进食饮水) & !buff(进食) & health < 80 & item(163052).count > 0','player'},
+    {'#159878','!buff(进食饮水) & !buff(进食) & health < 80 & item(159878).count > 0','player'},
+    {'#163107','!buff(进食饮水) & !buff(进食) & health < 80 & item(163107).count > 0','player'},
+    {'#159874','!buff(进食饮水) & !buff(进食) & health < 80 & item(159874).count > 0','player'},
 }
 
 --喝水 
 local drinkWater = {
-    --跃岩矿泉水 159867
+    --跃岩矿泉水 159867    
     --159868 散养羊奶
-    {'/use 散养羊奶','!buff(喝水) & !buff(进食饮水) & mana < 80 & item(159868).count > 0'},    
-    {'/use 跃岩矿泉水','!buff(喝水) & !buff(进食饮水) & mana < 80 & item(跃岩矿泉水).count > 0'},
-    {'/use 魔法汉堡','!buff(进食饮水) & !buff(喝水) &mana < 80 & item(魔法汉堡).count > 0'},
+    {'#159868','!buff(喝水) & !buff(进食饮水) & mana < 80 & item(159868).count > 0'},    
+    {'#159867','!buff(喝水) & !buff(进食饮水) & mana < 80 & item(159867).count > 0'},
+    {'#113509','!buff(进食饮水) & !buff(喝水) &  & !buff(进食) & mana < 80 & item(113509).count > 0'},
 }
 
 --吃喝
 local eatAnddrink={
-    {eatFood,'UI(key_Food_check) & !buff(进食) & !moving & health<UI(key_Food_spin)'},
-    {drinkWater,'UI(key_Drink_check) & !buff(喝水) & !moving & mana<UI(key_Drink_spin)'},
-    --{eatCooking,'UI(key_Cooking)'},
-    {'/stand','mana > 80 & {buff(喝水) || buff(进食) || buff(进食饮水)}'},
+    {eatFood,'UI(key_Food_check) & !moving & health<UI(key_Food_spin)'},
+    {drinkWater,'UI(key_Drink_check) !moving & mana<UI(key_Drink_spin)'},    
+    {'/stand','mana > 90 & {buff(喝水) || buff(进食) || buff(进食饮水)}'},
    
 }
 
 --战斗中 战斗策略
 local inCombat={
+    
     {'!/stopcasting','debuff(践踏).duration.any < gcd & debuff(践踏).any','player'},  -- 应对大秘境词缀 震荡
+    {'!/stopcasting','casting(震耳咆哮) & interruptAt(10)','enemies'},--应对自由镇 震耳咆哮打断施法
     {boostSpeed},    
     {BuffCheck,'UI(key_IC_PF)'},        
     {HealStone},
@@ -210,47 +202,31 @@ local inCombat={
     {purfy,'player.mana > 40 & lowest.health > 40'},
     {'!渐隐术','target(player)','enemies'},    
     {'!神圣化身',' area(40,50).heal >= 2 || {tank.alive & tank.health < 30 & tank.distance < 40}','player'}, 
-    --当自己血量低于35% 绝望祷言
     {'!绝望祷言','UI(Key_DP_check) & health < UI(Key_DP_spin)','player'},
-    --当自己血量低于15% 翅膀
     {'!守护之魂','distance < 40 & health < UI(Key_GP_spin) & UI(Key_GP_check)','player'},
-    --当T血量低于10% 翅膀
     {'!守护之魂','distance < 40 & health < UI(Key_GT_spin) & UI(Key_GT_check)','tank'},
-    --当dps血量低于15% 翅膀
     {'!守护之魂','distance < 40 & health < UI(Key_GO_spin) & UI(Key_GO_check)','lowest'},
-    --愈合祷言 前提是没人血危
-    {'愈合祷言', 'UI(key_PM) & tank.health > 30 & tank.alive & !player.moving & lowest.health >55 & !buff(愈合祷言)', 'tank'},
-    -- 治疗祷言 前提是没人血危
+    {'愈合祷言', 'UI(key_PM) & tank.health > 30 & tank.alive & !player.moving & lowest.health >55 & !buff(愈合祷言)', 'tank'}, 
     {'治疗祷言','UI(key_PH) & lowest.distance  <  40  &  player.spell(圣言术：灵).cooldown  >  0 & {player.spell(治疗之环).cooldown  >  0  &  talent(5,3)} &  lowest.area(UI(key_PH_Range),UI(key_PH_Count)).heal >= UI(key_PH_Count) & !player.moving','lowest'},  
-    --光晕
-    --如何不ADD？
-     -- 圣言术：灵
     {'!圣言术：灵','UI(key_Sanctify) & distance < 40 & lowest.area(10,UI(key_Sanctify_Health)).heal  >=  UI(key_Sanctify_Count)','lowest.ground'},
-    -- 联结治疗（天赋5,2）
     {'!联结治疗','friendly.health < 80 & spell(圣言术：静).cooldown> 0 & friendly.distance < 40 & friendly.area(20,80).heal > 0 & spell(圣言术：灵).cooldown>0 & !player.moving & talent(5,2)','friendly'},
-      -- 快速治疗 无论有无瞬发buff
-      -- 考虑下若T死了咋办 好JB烦=================================================================
-    --{'快速治疗','{{tank.alive & lowest.health  > 30} || tank.dead } & spell(圣言术：静).cooldown>0 & lowest.distance < 40 & lowest.health < 75 & !player.moving','lowest'},   
-    --下面一行用于临时修正T的功能
-    --{'快速治疗','!player.moving & tank.alive & spell(圣言术：静).cooldown > 0 & health < 85','tank'},
     {'快速治疗','spell(圣言术：静).cooldown > 0 & lowest.distance < 40 & lowest.health < 75 & !player.moving','lowest'},   
-     
-    -- 快速治疗 无论有无瞬发buff
-    --{'快速治疗','{{tank.alive & lowest.health  > 30} || tank.dead } & spell(圣言术：静).cooldown > 0 & distance < 40 & health < 75 & !player.moving','tank'},       
-    -- 快速治疗2 有瞬发buff 
     {'!快速治疗','{player.moving || player.buff(圣光涌动).duration<=3 || lowest.health < 40} & spell(圣言术：静).cooldown > 0 & player.buff(圣光涌动) & lowest.distance < 40 & lowest.health < 85','lowest'},  
-    -- 圣言术：静
     {'!圣言术：静','lowest.distance < 40 & lowest.health < 65','lowest'},
     {'!圣言术：静','tank.alive & distance < 40 & health < 70','tank'},   
-    --治疗术
     {'治疗术','lowest.health > 50 & distance < 40 & health < 90 & !player.moving','lowest'},
-    --T的恢复
     {'恢复','!buff(恢复) & distance < 40 & health < 90','tank'},
-    --队友的恢复，一般在我移动时候才放
     {'恢复','!buff(恢复) & distance < 40 & health < 80 & player.moving','lowest'},    
 }
 
+local outCombat = {
+    {'/s 骑马','IsMounted','player'},
+    {'#159867','!buff(喝水) & !buff(进食饮水) & mana < 80 & item(跃岩矿泉水).count > 0'},
 
+    {inCombat,'!player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水) & !player.casting(圣言术：赎) & !{buff(喝水) || buff(进食) || buff(进食饮水)}'},
+    {eatAnddrink,'health > 50','player'},
+
+}
 
 local blacklist = {
     debuff = {name = "Misery"},
@@ -263,7 +239,7 @@ local Spell_wow801_Priest_Holy={
 NeP.CR:Add(257, {
     name = '|cffFACC2E [老日]|r 神牧 - |cffFACC2E五人本|r',
     ic = {{inCombat,'group.type == 2 & !player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水) & !player.casting(圣言术：赎)'}},
-    ooc = {{inCombat,'!player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水) & !player.casting(圣言术：赎)'}},
+    ooc = outCombat,
     gui = GUI,
     gui_st = {title='老日的牧师助手-神牧', width='512', height='800', color='FACC2E'},
     ids = Spell_wow801_Priest_Holy,

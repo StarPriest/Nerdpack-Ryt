@@ -1,4 +1,4 @@
-## Title: |r[|cff0070deNerdPack|r] Ryt's Priest
+## Title: |r[|cff0070deNerdPack|r] Ryt's Combat Routines
 ## Notes: Custom Priest Combat Rotations for Nerdpack
 ## Dependencies: NerdPack
 ## Interface: 80100

@@ -8,18 +8,18 @@
 #### 不太会用GIT，诸位将就。
 
 #### 使用方法
-#### 1.下载 [EWT ](https://ewtwow.com/EWT/Application.zip "EWT ")
-#### 2.Clone [NerdPack](https://github.com/hacker5510/NerdPack.git "NerdPack")
-#### 3.Clone [NerdPack-Protected](https://github.com/hacker5510/NerdPack-Protected.git "NerdPack-Protected")
-#### 4.Clone [NerdPack-RTYPriest](https://github.com/hacker5510/NerdPack-RTYPriest.git "NerdPack-RTYPriest")
-#### 将2、3、4步下载的文件夹放入wow\Interface\Addons\
-#### 打开ewt设置wow路径，选择safemode 之后点Attach按钮运行。等待EWT关闭后输入账号密码登录wow
+>#### 1.下载 [EWT ](https://ewtwow.com/EWT/Application.zip "EWT ")
+>#### 2.Clone [NerdPack](https://github.com/hacker5510/NerdPack.git "NerdPack")
+>#### 3.Clone [NerdPack-Protected](https://github.com/hacker5510/NerdPack-Protected.git "NerdPack-Protected")
+>#### 4.Clone [NerdPack-RTYPriest](https://github.com/hacker5510/NerdPack-RTYPriest.git "NerdPack-RTYPriest")
+>#### 将2、3、4步下载的文件夹放入wow\Interface\Addons\
+>#### 打开ewt设置wow路径，选择safemode 之后点Attach按钮运行。等待EWT关闭后输入账号密码登录wow
 # 神牧 推荐使用 进攻部分未做，闲时以治疗术填充。
-## 团队副本
-### 测试环境：30人
-### 测试天赋：1 3 2 2 3 3 3
-### 测试结果：轻松无脑，蛮爽的。
-#### 治疗逻辑概述：保证T不死的前提下，数据怎么好看怎么来，意味着少放单刷技能
+>## 团队副本
+>>### 测试环境：30人
+>>>### 测试天赋：1 3 2 2 3 3 3
+>>>### 测试结果：轻松无脑，蛮爽的。
+>>>#### 治疗逻辑概述：保证T不死的前提下，数据怎么好看怎么来，意味着少放单刷技能
 - #### 坦克/自身 优先确保血量
 - #### 根据范围内指定血量以及低于该血量的人数来判断释放什么团刷技能。
 - #### 神圣赞美诗，回蓝歌，真言术：赎，建议手动释放，测试中未成功自动释放过。
