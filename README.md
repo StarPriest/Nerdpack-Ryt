@@ -1,5 +1,5 @@
 
-![](http://www.gnarlyguides.com/wp-content/uploads/2016/05/priest-holy-wow.jpg)
+![](https://us.battle.net/forums/static/images/game-logos/game-logo-wow.png)
 
 # NerdPack-RYT-Priest
 #### 该项目是基于Nerdpack的一个牧师自动战斗策略。
