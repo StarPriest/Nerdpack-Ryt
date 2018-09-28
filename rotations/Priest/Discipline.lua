@@ -201,16 +201,16 @@ local Posion ={
 
 local AttackEnemies = {
     --死亡时间大于18秒且场内血量最高
-    {'教派分歧','!player.moving & ttd > 18 & distance < 40 & infront','target'},
-    {'教派分歧','!player.moving & ttd > 18 & distance < 40 & infront','enemies'},
+    {'教派分歧','canAttack & !player.moving & ttd > 18 & distance < 40 & infront','target'},
+    {'教派分歧','canAttack & !player.moving & ttd > 18 & distance < 40 & infront','enemies'},
     --此处净化邪恶，我嫌他释放频率太低转到不受友方血量控制的区域了
-    {'!净化邪恶','distance < 40 & combat & !debuff(净化邪恶) ','target'},
-    {'!净化邪恶','distance < 40 & combat & !debuff(净化邪恶) ','enemies'},
+    {'!净化邪恶','canAttack & distance < 40 & combat & !debuff(净化邪恶) ','target'},
+    {'!净化邪恶','canAttack & distance < 40 & combat & !debuff(净化邪恶) ','enemies'},
     --PVP 删除    
     --{'苦修','health < 5 & distance < 40 & combat & {debuff(教派分歧) || spell.cooldown(教派分歧) > 0}','lowestenemy'},
-    {'苦修','distance < 40 & combat & {debuff(教派分歧) || spell.cooldown(教派分歧) > 0}','target'},
-    {'惩击','!player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','target'},
-    {'惩击','!player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','enemies'},
+    {'苦修','canAttack & distance < 40 & combat & {debuff(教派分歧) || spell.cooldown(教派分歧) > 0}','target'},
+    {'惩击','canAttack & !player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','target'},
+    {'惩击','canAttack & !player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','enemies'},
    
 }
 local inCombatPartyNormal = {
