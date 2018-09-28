@@ -62,3 +62,24 @@ NeP.FakeUnits:Add('lbuffa', function(num, args)
       table.sort( tempTable, function(a,b) return a.health < b.health end )
       return tempTable[num] and tempTable[num].key
   end)
+--- Highest Health Enemy
+NeP.FakeUnits:Add("highestenemy", function(num)
+    local tempTable = {}
+     for _, Obj in pairs(NeP.OM:Get("Enemy")) do
+       if _G.UnitInPhase(Obj.key)
+        and NeP.Protected.Distance("player", Obj.key) < 50
+        and _G.UnitCanAttack(Obj.key, "player")
+        and _G.UnitAffectingCombat(Obj.key)
+        and not _G.UnitIsPlayer(Obj.key)
+        and not _G.UnitIsPVP(Obj.key)
+        and not NeP.DSL:Get("boss")(Obj.key)
+        and NeP.Protected.Infront("player", Obj.key) then
+         tempTable[#tempTable+1] = {
+             key = Obj.key,
+             health = _G.UnitHealth(Obj.key)
+         }
+       end
+     end
+     table.sort( tempTable, function(a,b) return a.health > b.health end )
+     return tempTable[num] and tempTable[num].key
+ end)

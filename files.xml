@@ -3,7 +3,7 @@
   <Script file="rotations\Mega\Frost.lua"/>
   <Script file="rotations\Priest\Holy_Party.lua"/>
   <Script file="rotations\Priest\Holy_Raid.lua"/>
-  <Script file="rotations\Priest\Discipline_Solo.lua"/>
+  <Script file="rotations\Priest\Discipline.lua"/>
   <Script file="condition.lua"/>
   <Script file="fakeunits.lua"/>
 </Ui>

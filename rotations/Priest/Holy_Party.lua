@@ -108,6 +108,8 @@ local purfy ={
     {'纯净术','debuff(瘟疫步).any & distance < 30','friendly'},
     {'纯净术','debuff(冰霜冲击).any & distance < 30','friendly'},
     {'纯净术','debuff(脑部冻结).any & distance < 30','friendly'},
+    --庄园
+    {'纯净术','debuff(碎裂灵魂).any & distance < 30','friendly'},
 }
 
 local dispel ={    
@@ -134,6 +136,7 @@ local dispel ={
     {'驱散魔法','buff(腐蚀性化合物).any & distance < 30','enemies'},
     {'驱散魔法','buff(转化：粘液).any & distance < 30','enemies'},
     {'驱散魔法','buff(灵魂防御).any & distance < 30','enemies'},
+
     
 }
 
@@ -156,7 +159,7 @@ local interrupt={
 
 --治疗石
 local HealStone ={
-    {'!#5512','UI(Key_UseHS_check) & spell(绝望祷言).cooldown > 0 & player.health < UI(Key_UseHS_spin) & item(5512).usable & item(5512).count>0'},
+    {'!#5512','UI(Key_UseHS_check) & spell(绝望祷言).cooldown > 0 & player.health < UI(Key_UseHS_spin) & item(5512).usable & item(5512).count > 0'},
 }
 
 --各种药水

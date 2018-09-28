@@ -86,6 +86,7 @@ NeP.DSL:Register("Garrote_Silence", function(target)
 end)
 
 --/dump NeP.DSL.Parse("buff_of_the_bones", "", "")
+--DK骨盾buff
 NeP.DSL:Register("buff_of_the_bones", function()
   local roll = 0
     if NeP.DSL:Get("buff.duration")("player", _G.GetSpellInfo(193357)) > 1.5 then  roll = roll + 2 end -- Shark Infested Waters
@@ -130,6 +131,8 @@ NeP.DSL:Register("isgcd", function()
 end)
 
 --USAGE UNIT.inRange(SPELL_NAME).spell
+--/dump NeP.DSL.Parse("target.inRange(真言术：韧).spell","","")
+--测试是否在施法范围内
 NeP.DSL:Register("inRange.spell", function(target, spell)
   local spellIndex, spellBook = NeP.Core:GetSpellBookIndex(spell)
    if not spellIndex then return false end
@@ -139,6 +142,7 @@ end)
  
 -- Arcane Mage 3x(Arcane Missile!) Condition 
 --/dump NeP.DSL.Parse("missile.ready", "", "")
+--奥术飞弹准备完毕。。。
 NeP.DSL:Register("missile.ready", function()
   if NeP.DSL:Get("buff.count")("player", _G.GetSpellInfo(79683)) == 3 then
 	return true
@@ -146,6 +150,7 @@ NeP.DSL:Register("missile.ready", function()
 end)
 
 --/dump NeP.DSL.Parse("dungeon.interrupts", "", "")
+--副本打断列表
 NeP.DSL:Register("dungeon.interrupts", function(target)
 local cast = { 
     196392, 226206, 226269, 226285, 211007, 203176,  -- Arcway
@@ -233,15 +238,42 @@ NeP.DSL:Register("IsMounted", function()
 end)
 
 --/dump NeP.DSL.Parse("target.InLOS", "", "")
+--视线内
 NeP.DSL:Register("InLOS", function(target)
   if _G.UnitExists(target) and _G.UnitIsVisible(target) then
   return NeP.Protected.LineOfSight("player", target) end
 end)
 
 --/dump NeP.DSL.Parse("IsStealthed", "", "")
+--是否潜行 貌似只能看到自己
 NeP.DSL:Register("IsStealthed", function()
   return _G.IsStealthed()
 end)
+
+--那些目标是我或者我的队友的怪 或者 红名怪 怎么写
+
+--获取指定范围内最近且血量小于指定值的人数 用于治疗祷言这种奇葩
+NeP.DSL:Register("area.heal", function(unit, args)
+	local total = 0
+	if not _G.UnitExists(unit) then return total end
+	local distance, health = _G.strsplit(",", args, 2)
+	for _,Obj in pairs(NeP.OM:Get('Roster')) do
+		local unit_dist = NeP.Protected.Distance(unit, Obj.key)
+		if unit_dist < (tonumber(distance) or 20)
+		and Obj.health < (tonumber(health) or 100) then
+			total = total + 1
+		end
+	end
+	return total
+end)
+
+NeP.DSL:Register("NearestFriendly",function(unit,args)
+--先范围内所有人，根据距离从小到大排序取距离最近的若干个，之后查看前若干个的血量是否低于指定百分比，若低于，累加计数
+  return 0
+end)
+
+
+
 
 --------------------------------------------------------------------------------
 ------------------------------ Xeer-TRAVEL SPEED--------------------------------
@@ -253,6 +285,7 @@ end)
 -- Return the time a spell will need to travel to the current target
 
 -- /dump NeP.DSL.Parse("target.spell(Pyroblast).traveltime", "", "")
+-- 弹道的飞行时间
 NeP.DSL:Register("spell.traveltime", function(unit, spell)
   local Travel_Chart = {
     [116]    = 23.174, -- Frostbolt
