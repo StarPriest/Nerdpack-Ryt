@@ -11,6 +11,7 @@ local GUI = {
     center = true},
 
     --设置项
+    {type = 'checkbox', text = '调试模式', key = 'key_DebugMode', width = 55, size=14,default = true},
     {type = 'header', text = '通用 设置', size=18,align = 'center'},
     {type = 'spinner', text = '进攻血量阈值', key = 'key_AttackHealth', size=14,width = 55, max = 100, step = 1, default = 80},
     {type = 'header', text = '加速盾/羽毛 设置', size=18,align = 'center'},
@@ -122,7 +123,7 @@ local dispel ={
 
 --羽毛或者加速盾
 local boostSpeed ={
-    {'天堂之羽','talent(2,3) & player.moving & !buff(天堂之羽)','player.ground'},
+    {'天堂之羽','!player.falling & talent(2,3) & player.moving & !buff(天堂之羽)','player.ground'},
     {'天堂之羽','distance < 40 & talent(2,3) & lowest.health < 70 & lowest.area(10).enemies > 0 & lowest.area(10).friednly < 1 & lowest.moving & !buff(天堂之羽)','lowest.ground'},
     {'天堂之羽','distance < 40 &  tank.exists & tank.alive & UI(key_AF) & talent(2,3) & tank.health < 70 & tank.area(10).friednly < 1 & tank.area(10).enemies > 0 & tank.moving & !buff(天堂之羽)','tank.ground'},
 }
@@ -201,16 +202,13 @@ local Posion ={
 
 local AttackEnemies = {
     --死亡时间大于18秒且场内血量最高
-    {'教派分歧','canAttack & !player.moving & ttd > 18 & distance < 40 & infront','target'},
-    {'教派分歧','canAttack & !player.moving & ttd > 18 & distance < 40 & infront','enemies'},
-    --此处净化邪恶，我嫌他释放频率太低转到不受友方血量控制的区域了
-    {'!净化邪恶','canAttack & distance < 40 & combat & !debuff(净化邪恶) ','target'},
-    {'!净化邪恶','canAttack & distance < 40 & combat & !debuff(净化邪恶) ','enemies'},
+    {'教派分歧','!player.moving & ttd > 18 & distance < 40 & infront','target'},
+    {'教派分歧','!player.moving & ttd > 18 & distance < 40 & infront','enemies'},
     --PVP 删除    
     --{'苦修','health < 5 & distance < 40 & combat & {debuff(教派分歧) || spell.cooldown(教派分歧) > 0}','lowestenemy'},
-    {'苦修','canAttack & distance < 40 & combat & {debuff(教派分歧) || spell.cooldown(教派分歧) > 0}','target'},
-    {'惩击','canAttack & !player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','target'},
-    {'惩击','canAttack & !player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','enemies'},
+    {'苦修','distance < 40 & combat & {debuff(教派分歧) || spell.cooldown(教派分歧) > 0}','target'},
+    {'惩击','!player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','target'},
+    {'惩击','!player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','enemies'},
    
 }
 local inCombatPartyNormal = {
@@ -221,9 +219,23 @@ local inCombatPartyNormal = {
     {dispel,'toggle(dispel)'},
     {HealStone},
     {Posion},
-    {healparty},
+    {'苦修','distance < 40 & exist & tank.alive & tank.health < UI(key_AttackHealth)','tank'},
+    {'苦修','distance < 40 & player.alive & player.health < UI(key_AttackHealth)','player'},
+    {'苦修','distance < 40 & lowest.alive & lowest.health < UI(key_AttackHealth)','lowest'},
+    {'暗影愈合','distance < 40 & spell(苦修).cooldown > 0 & !player.moving & tank.exist & tank.alive & health < UI(key_AttackHealth)','tank'},
+    {'暗影愈合','distance < 40 & spell(苦修).cooldown > 0 & !player.moving & player.healthalive & player.health < UI(key_AttackHealth)','player'},
+    {'暗影愈合','distance < 40 & spell(苦修).cooldown > 0 & !player.moving & lowest.alive & lowest.health < UI(key_AttackHealth)','lowest'},
     {shadowFiendParty},
-    {jiushu},
+        --{'真言术：盾','distance < 40 & incdmg(5) < 10000 & !buff(真言术：盾) & !player.moving & exist & alive & health < 50','tank'},
+    --做个开关，切换T的盾破盾 / 救赎盾
+    {'真言术：盾','toggle(Cooldowns) & {!buff(真言术：盾) || !buff(救赎) || buff(救赎).duration < 3} & distance < 40 & tank.exist & tank.alive' ,'tank'},
+    {'真言术：盾','!toggle(Cooldowns) & {!buff(救赎) || buff(救赎).duration < 3} & distance < 40 & tank.exist & tank.alive ','tank'},
+    {'真言术：盾','{!buff(救赎) || buff(救赎).duration < 3} & health < 85','player'},
+    {'真言术：盾','distance < 40 & !buff(救赎) & health < 85 & area(40,75).heal <= 2','friendly'},
+    --{'真言术：耀','!player.moving & distance < 40 & area(30,85).heal >= 3 & count.friendly.buffs(救赎) < 3 ','lowest'},
+    {'!真言术：耀','distance < 40 & area(30,85).heal >= 3 & count.friendly.buffs(救赎) != 5 ','lowest'},
+    {'!净化邪恶','distance < 40 & combat & !debuff(净化邪恶) ','target'},
+    {'!净化邪恶','distance < 40 & combat & !debuff(净化邪恶) ','enemies'},
     {AttackEnemies,'lowest.health >= UI(key_AttackHealth)'},   
     {boostSpeed},
     
@@ -234,7 +246,8 @@ local inCombatParty = {
     {'真言术：盾','player.buff(全神贯注) & !buff(真言术：盾)','friendly'},
 }
 
-local outCombatParty = {
+local outCombatParty = {   
+    {'漂浮术','falling & falling.duration > 1','player'},
     {AttackEnemies},
     {boostSpeed},
     {'真言术：韧','!buff(真言术：韧) || buff(真言术：韧).duration < 600 & !player.buff(喝水) & !player.buff(进食喝水)','friendly'},
@@ -270,11 +283,11 @@ local inCombatSolo = {
 
 local inCombat = {
     --{inCombatSolo,'group.type == 1'},
-    {inCombatParty,'group.type == 2'},
+    {inCombatParty,'group.type == 2 || UI(key_DebugMode)'},
 }
 --锯齿鲨 锤头鲨
 local outCombat={
-    {outCombatParty,'group.type == 2'},
+    {outCombatParty,'group.type == 2|| UI(key_DebugMode)'},
   
 }
 
