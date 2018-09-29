@@ -255,6 +255,7 @@ local outCombatParty = {
     {'真言术：耀','distance < 40 & !player.moving & area(40,85).heal >= 5','lowest'},
     {'苦修','distance < 40 & !player.moving & health < 85','lowest'},
     {'暗影愈合','distance < 40 & !player.moving & spell(苦修).cooldown > 0 & health < 85','lowest'},
+    {'群体复活','distance < 100 & dead','friendly'},
    
 }
 
