@@ -34,7 +34,7 @@ local exeOnLoad = function()
     })
 
     NeP.Interface:AddToggle({
-    key = 'prufy',
+    key = 'purify',
     name = '友方驱散',
     text = '开关友方驱散，仅支持驱散列表内现有的法术',
     icon = 'Interface\\ICONS\\spell_holy_dispelmagic', --toggle(disp)
@@ -119,7 +119,12 @@ local dispel ={
     
 }
 
-
+local purify2 = {
+    {'纯净术','friend & needpurify & distance < 40','{tank,player,lowest,friendly}'},
+}
+local dispel2 = {
+    {'驱散魔法','enemy & needdispel2 & distance < 30','enemies'},
+}
 
 --羽毛或者加速盾
 local boostSpeed ={
@@ -167,6 +172,9 @@ local shadowFiendParty ={
     若T的血量低于xxx且T在风筝的时候，给T加速羽毛
     记录队伍内所有玩家的CD技能，如打断，如救急
     记录变态debuff / buff 并作出相应提示以及应对
+    --备受鼓舞 驱散魔法
+    --溃烂撕咬 纯净术
+    --化学灼烧 纯净术
 ]]
 local healparty = {
     {'苦修','distance < 40 & exist & tank.alive & tank.health < UI(key_AttackHealth)','tank'},
@@ -207,16 +215,17 @@ local AttackEnemies = {
     --PVP 删除    
     --{'苦修','health < 5 & distance < 40 & combat & {debuff(教派分歧) || spell.cooldown(教派分歧) > 0}','lowestenemy'},
     {'苦修','distance < 40 & combat & {debuff(教派分歧) || spell.cooldown(教派分歧) > 0}','target'},
-    {'惩击','!player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','target'},
-    {'惩击','!player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','enemies'},
+    {'惩击','{debuff(教派分歧) || spell.cooldown(教派分歧) > 0} & !player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','target'},
+    {'惩击','{debuff(教派分歧) || spell.cooldown(教派分歧) > 0} & !player.moving & distance < 40 & spell(苦修).cooldown > 0 & combat & infront','enemies'},
    
 }
 local inCombatPartyNormal = {
+  
      {'痛苦压制','distance < 40 & health < 30','lowest'},
      {'真言术：障','area(10,50).heal >=3 & distance < 40','lowest.ground'},
      {'!绝望祷言','health <= 35','player'},
-    {purify,'toggle(prufy)'},
-    {dispel,'toggle(dispel)'},
+    {purify2,'toggle(purify)'},
+    {dispel2,'toggle(dispel)'},
     {HealStone},
     {Posion},
     {'苦修','distance < 40 & exist & tank.alive & tank.health < UI(key_AttackHealth)','tank'},
@@ -234,8 +243,8 @@ local inCombatPartyNormal = {
     {'真言术：盾','distance < 40 & !buff(救赎) & health < 85 & area(40,75).heal <= 2','friendly'},
     --{'真言术：耀','!player.moving & distance < 40 & area(30,85).heal >= 3 & count.friendly.buffs(救赎) < 3 ','lowest'},
     {'!真言术：耀','distance < 40 & area(30,85).heal >= 3 & count.friendly.buffs(救赎) != 5 ','lowest'},
-    {'!净化邪恶','distance < 40 & combat & !debuff(净化邪恶) ','target'},
-    {'!净化邪恶','distance < 40 & combat & !debuff(净化邪恶) ','enemies'},
+    {'!净化邪恶','!player.casting(真言术：耀) & distance < 40 & combat & !debuff(净化邪恶) ','target'},
+    {'!净化邪恶','!player.casting(真言术：耀) & distance < 40 & combat & !debuff(净化邪恶) ','enemies'},
     {AttackEnemies,'lowest.health >= UI(key_AttackHealth)'},   
     {boostSpeed},
     

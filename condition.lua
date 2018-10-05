@@ -50,6 +50,10 @@ NeP.DSL:Register("immune_all",function(target)
   end
 end)
 
+
+
+
+
 --/dump NeP.DSL.Parse("target.immune_stun", "", "")
 NeP.DSL:Register("immune_stun",function(target)
  local immunstun = { 
@@ -310,3 +314,4 @@ NeP.DSL:Register("spell.traveltime", function(unit, spell)
 		return 0
 	end
 end)
+

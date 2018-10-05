@@ -1,9 +1,11 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-  <Script file="rotations\Mega\Frost.lua"/>
+  <Script file="rotations\Mage\Frost.lua"/>
   <Script file="rotations\Priest\Holy_Party.lua"/>
   <Script file="rotations\Priest\Holy_Raid.lua"/>
   <Script file="rotations\Priest\Discipline.lua"/>
   <Script file="condition.lua"/>
   <Script file="fakeunits.lua"/>
+  <Script file="dispel.lua"/>
+  <Script file="purify.lua"/>
 </Ui>

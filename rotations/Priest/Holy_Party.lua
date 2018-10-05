@@ -81,11 +81,12 @@ local exeOnLoad = function()
     print('|cffff0000 设置项: |r右键主开关可找到|r')
   end
 
-local purfy ={   
+local purify ={   
     --注意 指定buff层数远离人群这种。 可以写出来 利用区域检测 暗影束缚
     --指定buff层数 去指定地点写不出来 
     --远离人群多少码驱散 如：area(10).friendly == 0  意思就是10码内没人
     --{'纯净术','debuff(debuff名称).any & distance < 40 & area(10).friendly == 0','friendly'},
+    --{'Cleanse','needDispel & distance < 41',{'tank','player','lowest','friendly'}},
     {'纯净术','debuff(烈焰震击).any & distance < 40','friendly'},
     {'纯净术','debuff(毒蛇诱惑).any & distance < 40','friendly'},
     {'纯净术','debuff(瘟疫).any & distance < 40','friendly'},
@@ -110,6 +111,7 @@ local purfy ={
     {'纯净术','debuff(脑部冻结).any & distance < 30','friendly'},
     --庄园
     {'纯净术','debuff(碎裂灵魂).any & distance < 30','friendly'},
+    {'纯净术','debuff(定身).any & distance < 30','friendly'},
 }
 
 local dispel ={    
@@ -140,6 +142,13 @@ local dispel ={
     
 }
 
+local purify2 = {
+    {'纯净术','friend & needpurify & distance < 40','{tank,player,lowest,friendly}'},
+}
+local dispel2 = {
+    {'驱散魔法','enemy & needdispel2 & distance < 30','enemies'},
+}
+
 --羽毛加速
 local boostSpeed ={
     {'天堂之羽','UI(key_AF) & talent(2,3) & player.moving & !buff(天堂之羽)','player.ground'},
@@ -167,7 +176,7 @@ local Posion ={
     --使用优先级：绝望祷言 糖 治疗药水 活力药水
     {'#152494', 'UI(Key_UseHP_check) & {spell(绝望祷言).cooldown > 0 || !UI(Key_DP)} & player.health < UI(Key_UseHP_spin) & item(152494).usable & item(152494).count > 0','player'},
     {'#163082','UI(Key_UseMHP_check) & {spell(绝望祷言).cooldown > 0 || !UI(Key_DP)} & player.health < UI(Key_UseMHP_spin) & item(163082).usable & item(163082).count >0 & item(152494).cooldown > 0','player'},
-    {'#152495','UI(Key_UseMP_check) & player.mana < UI(Key_UseMP_spin) & item(152495).usable & item(152495).count > 0','player'},
+   -- {'#152495','UI(Key_UseMP_check) & player.mana < UI(Key_UseMP_spin) & item(152495).usable & item(152495).count > 0','player'},
 }
 
 --吃食物
@@ -199,6 +208,21 @@ local eatAnddrink={
    
 }
 
+local healParty = {
+    {'愈合祷言', 'tank.exists & UI(key_PM) & tank.health > 30 & tank.alive & !player.moving & lowest.health >55 & !buff(愈合祷言)', 'tank'}, 
+    {'治疗祷言','UI(key_PH) & lowest.distance  <  40  &  player.spell(圣言术：灵).cooldown  >  0 & {player.spell(治疗之环).cooldown  >  0  &  talent(5,3)} &  lowest.area(UI(key_PH_Range),UI(key_PH_Count)).heal >= UI(key_PH_Count) & !player.moving','lowest'},  
+    {'!圣言术：灵','UI(key_Sanctify) & distance < 40 & lowest.area(10,UI(key_Sanctify_Health)).heal  >=  UI(key_Sanctify_Count)','lowest.ground'},
+    {'!联结治疗','friendly.health < 80 & spell(圣言术：静).cooldown> 0 & friendly.distance < 40 & friendly.area(20,80).heal > 0 & spell(圣言术：灵).cooldown>0 & !player.moving & talent(5,2)','friendly'},
+    {'快速治疗','esists & alive & spell(圣言术：静).cooldown > 0 & lowest.distance < 40 & lowest.health < 85 & !player.moving','{lowest}'},
+    {'圣言术：静','lowest.distance < 40 & lowest.health < 65','lowest'},
+    {'圣言术：静','tank.exists & .alive & distance < 40 & health < 70','tank'},   
+    --{'治疗术','lowest.health > 70 & distance < 40 & lowest.health < 90 & !player.moving','lowest'},
+}
+local dps ={
+    {'惩击','spell(圣言术：罚).cooldown > 0 & !player.moving','target'},
+    {'圣言术：罚','spell(圣言术：罚).cooldown == 0','target'},
+}
+
 --战斗中 战斗策略
 local inCombat={
     {'!/stopcasting','debuff(践踏).duration.any < gcd & debuff(践踏).any','player'},  -- 应对大秘境词缀 震荡
@@ -207,31 +231,24 @@ local inCombat={
     {BuffCheck,'UI(key_IC_PF)'},        
     {HealStone},
     {Posion},
-    {dispel,'player.mana > 30 & lowest.health > 30'},
-    {purfy,'player.mana > 40 & lowest.health > 40'},
+    {dispel2},
+    {purify2},
     {'!渐隐术','target(player)','enemies'},    
     {'!神圣化身',' area(40,50).heal >= 2 || {tank.exists & tank.alive & tank.health < 30 & tank.distance < 40}','player'}, 
     {'!绝望祷言','UI(Key_DP_check) & health < UI(Key_DP_spin)','player'},
-    {'!守护之魂','distance < 40 & health < UI(Key_GP_spin) & UI(Key_GP_check)','player'},
-    {'!守护之魂','tank.exists & distance < 40 & health < UI(Key_GT_spin) & UI(Key_GT_check)','tank'},
-    {'!守护之魂','distance < 40 & health < UI(Key_GO_spin) & UI(Key_GO_check)','lowest'},
-    {'愈合祷言', 'tank.exists & UI(key_PM) & tank.health > 30 & tank.alive & !player.moving & lowest.health >55 & !buff(愈合祷言)', 'tank'}, 
-    {'治疗祷言','UI(key_PH) & lowest.distance  <  40  &  player.spell(圣言术：灵).cooldown  >  0 & {player.spell(治疗之环).cooldown  >  0  &  talent(5,3)} &  lowest.area(UI(key_PH_Range),UI(key_PH_Count)).heal >= UI(key_PH_Count) & !player.moving','lowest'},  
-    {'!圣言术：灵','UI(key_Sanctify) & distance < 40 & lowest.area(10,UI(key_Sanctify_Health)).heal  >=  UI(key_Sanctify_Count)','lowest.ground'},
-    {'!联结治疗','friendly.health < 80 & spell(圣言术：静).cooldown> 0 & friendly.distance < 40 & friendly.area(20,80).heal > 0 & spell(圣言术：灵).cooldown>0 & !player.moving & talent(5,2)','friendly'},
-    {'快速治疗','spell(圣言术：静).cooldown > 0 & lowest.distance < 40 & lowest.health < 75 & !player.moving','lowest'},   
-    {'快速治疗','{player.moving || player.buff(圣光涌动).duration<=3 || lowest.health < 40} & spell(圣言术：静).cooldown > 0 & player.buff(圣光涌动) & lowest.distance < 40 & lowest.health < 85','lowest'},  
-    {'圣言术：静','lowest.distance < 40 & lowest.health < 65','lowest'},
-    {'圣言术：静','tank.exists & .alive & distance < 40 & health < 70','tank'},   
-    {'治疗术','lowest.health > 70 & distance < 40 & lowest.health < 90 & !player.moving','lowest'},
-    {'恢复','tank.exists & !buff(恢复) & distance < 40 & health < 90','tank'},
-    {'恢复','!buff(恢复) & distance < 40 & health < 80 & player.moving','lowest'},    
+    {'!守护之魂','friend & distance < 40 & health < UI(Key_GP_spin) & UI(Key_GP_check)','player'},
+    {'!守护之魂','friend & tank.exists & distance < 40 & health < UI(Key_GT_spin) & UI(Key_GT_check)','tank'},
+    {'!守护之魂','friend & distance < 40 & health < UI(Key_GO_spin) & UI(Key_GO_check)','lowest'},
+    {healParty,'friend & lowest.health < 85 || tank.health < 85 || player.health < 85'},
+    {dps,'enemy & tank.health >= 85 & lowest.health >= 85 & player.health >= 85'},  
+    {'恢复','friend & tank.exists & !buff(恢复) & distance < 40 & health < 90','tank'},
+    {'恢复','friend & !buff(恢复) & distance < 40 & health < 80 & player.moving','lowest'},    
 }
 
 local outCombat = {
-    {'#159867','!buff(喝水) & !buff(进食饮水) & mana < 80 & item(跃岩矿泉水).count > 0'},
+   
     {inCombat,'!player.channeling(神圣赞美诗) & !player.channeling(希望象征) & !player.channeling(滋养药水) & !player.casting(圣言术：赎) & !{buff(喝水) || buff(进食) || buff(进食饮水)}'},
-    {eatAnddrink,'health > 50','player'},
+    --{eatAnddrink,'health > 50','player'},
 }
 
 local blacklist = {
