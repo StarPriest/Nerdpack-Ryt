@@ -30,7 +30,7 @@ local exeOnLoad = function()
       key = 'dispel',
       name = '进攻驱散',
       text = '开关进攻驱散，仅支持驱散列表内现有的法术',
-      icon = 'Interface\\ICONS\\spell_holy_nullifydisease', --toggle(disp)
+      icon = 'Interface\\ICONS\\spell_nature_nullifydisease', --toggle(disp)
     })
 
     NeP.Interface:AddToggle({
